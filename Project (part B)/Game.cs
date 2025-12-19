@@ -7,9 +7,21 @@
 
         public bool IsInstalled { get; set; }
 
-        public override void Install() => throw new NotImplementedException();
-        public override void Uninstall() => throw new NotImplementedException();
-        public override void DisplayInfo() => throw new NotImplementedException();
+        public override void Install()
+        {
+            IsInstalled = true;
+            Console.WriteLine($"Гру {Title} встановлено");
+        }
+        public override void Uninstall()
+        {
+            IsInstalled = false;
+            Console.WriteLine($"Гру {Title} видалено");
+        }
+
+        public override void DisplayInfo()
+        {
+            Console.WriteLine($"[Game] {Title} | Genre: {GameGenre} | Price: {Price} | Installed: {IsInstalled}");
+        }
 
         public override object Clone()
         {

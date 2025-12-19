@@ -19,13 +19,6 @@ namespace Project__part_B_
             return CompareTo((ILibraryItem?)other);
         }
 
-        public int CompareTo(object? obj)
-        {
-            if (obj == null) return 1;
-            if (obj is ILibraryItem other) return CompareTo(other);
-            throw new ArgumentException("Object is not a LibraryItem");
-        }
-
         public abstract object Clone();
         public abstract void Install();
         public abstract void Uninstall();

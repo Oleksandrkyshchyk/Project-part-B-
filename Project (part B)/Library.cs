@@ -55,12 +55,11 @@ namespace Project__part_B_
             return PurchasedGames.Count;
         }
 
-        public List<LibraryItem> FindGamesByGenre(Genre genre)
+        public List<Game> FindGamesByGenre(Genre genre)
         {
-            // Динамічне визначення типу
             return PurchasedGames
-                .Where(item => item is Game g && g.GameGenre == genre)
-                .Cast<LibraryItem>()
+                .OfType<Game>()
+                .Where(g => g.GameGenre == genre)
                 .ToList();
         }
 

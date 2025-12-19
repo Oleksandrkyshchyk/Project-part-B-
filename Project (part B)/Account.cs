@@ -9,7 +9,10 @@
 
         public void ChangePassword(string newPassword)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(newPassword))
+                throw new ArgumentException("Пароль не може бути порожнім");
+
+            Password = newPassword;
         }
     }
 }
