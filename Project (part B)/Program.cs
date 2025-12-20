@@ -121,12 +121,19 @@ class Program
         {
             Console.Clear();
             Console.WriteLine("-------- СОРТУВАННЯ --------");
-            Console.WriteLine("1. За назвою");
-            Console.WriteLine("2. За ціною");
+            Console.WriteLine("1. За назвою (A–Z)");
+            Console.WriteLine("2. За ціною (зростання)");
             Console.WriteLine("0. Назад");
             Console.WriteLine("----------------------------");
 
             int choice = ReadIntInRange("Оберіть дію", 0, 2);
+
+            if (!library.PurchasedGames.Any())
+            {
+                ShowInfo("Бібліотека порожня");
+                Pause();
+                continue;
+            }
 
             switch (choice)
             {
@@ -148,6 +155,7 @@ class Program
             }
         }
     }
+
 
     // ACCOUNT MENU
 
@@ -484,10 +492,113 @@ class Program
 
 
 
-    static void ShowAllItems() { ShowInfo("Перегляд усіх елементів"); Pause(); }
-    static void ShowOnlyGames() { ShowInfo("Перегляд ігор"); Pause(); }
-    static void ShowOnlyAddons() { ShowInfo("Перегляд аддонів"); Pause(); }
-    static void FindGamesByGenre() { ShowInfo("Пошук за жанром"); Pause(); }
+    static void ShowAllItems()
+    {
+        Console.Clear();
+        Console.WriteLine("-------- УСІ ЕЛЕМЕНТИ --------");
+
+        if (!library.PurchasedGames.Any())
+        {
+            ShowInfo("Бібліотека порожня");
+            Pause();
+            return;
+        }
+
+        foreach (var item in library.PurchasedGames)
+        {
+            item.DisplayInfo();
+        }
+
+        Pause();
+    }
+
+    static void ShowOnlyGames()
+    {
+        Console.Clear();
+        Console.WriteLine("-------- УСІ ІГРИ --------");
+
+        var games = library.PurchasedGames.OfType<Game>().ToList();
+
+        if (!games.Any())
+        {
+            ShowInfo("У бібліотеці немає ігор");
+            Pause();
+            return;
+        }
+
+        foreach (var game in games)
+        {
+            game.DisplayInfo();
+        }
+
+        Pause();
+    }
+
+    static void ShowOnlyAddons()
+    {
+        Console.Clear();
+        Console.WriteLine("-------- УСІ АДДОНИ --------");
+
+        var addons = library.PurchasedGames.OfType<Addon>().ToList();
+
+        if (!addons.Any())
+        {
+            ShowInfo("У бібліотеці немає аддонів");
+            Pause();
+            return;
+        }
+
+        foreach (var addon in addons)
+        {
+            addon.DisplayInfo();
+        }
+
+        Pause();
+    }
+
+    static void FindGamesByGenre()
+    {
+        Console.Clear();
+        Console.WriteLine("-------- ПОШУК ІГОР ЗА ЖАНРОМ --------");
+
+        // Отримуємо всі доступні жанри
+        var genres = Enum.GetValues(typeof(Genre)).Cast<Genre>().ToList();
+
+        // Виводимо жанри
+        for (int i = 0; i < genres.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}. {genres[i]}");
+        }
+
+        // Вибір жанру
+        int choice = ReadIntInRange("Оберіть жанр", 1, genres.Count);
+        Genre selectedGenre = genres[choice - 1];
+
+        Console.Clear();
+        Console.WriteLine($"-------- ІГРИ ЖАНРУ: {selectedGenre} --------");
+
+        // Пошук ігор за жанром
+        var games = library.PurchasedGames
+            .OfType<Game>()
+            .Where(g => g.GameGenre == selectedGenre)
+            .ToList();
+
+        if (!games.Any())
+        {
+            ShowInfo("Ігор з таким жанром не знайдено");
+            Pause();
+            return;
+        }
+
+        // Вивід результатів
+        foreach (var game in games)
+        {
+            game.DisplayInfo();
+        }
+
+        Pause();
+    }
+
 
 
 
