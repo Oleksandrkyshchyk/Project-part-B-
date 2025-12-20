@@ -169,10 +169,11 @@ class Program
             Console.WriteLine("-------- АККАУНТ --------");
             Console.WriteLine("1. Показати інформацію");
             Console.WriteLine("2. Змінити пароль");
+            Console.WriteLine("3. Змінити імʼя користувача");
             Console.WriteLine("0. Назад");
             Console.WriteLine("-------------------------");
 
-            int choice = ReadIntInRange("Оберіть дію", 0, 2);
+            int choice = ReadIntInRange("Оберіть дію", 0, 3);
 
             switch (choice)
             {
@@ -182,6 +183,9 @@ class Program
 
                 case 2:
                     ChangePassword();
+                    break;
+                case 3:
+                    ChangeUsername();
                     break;
 
                 case 0:
@@ -602,8 +606,42 @@ class Program
 
 
 
-    static void ShowAccountInfo() { ShowInfo("Інформація про акаунт"); Pause(); }
-    static void ChangePassword() { ShowInfo("Зміна пароля"); Pause(); }
+    static void ShowAccountInfo()
+    {
+        Console.Clear();
+        Console.WriteLine("-------- ІНФОРМАЦІЯ ПРО АКАУНТ --------");
+
+        Console.WriteLine($"Email: {library.UserAccount.Email}");
+        Console.WriteLine($"Імʼя користувача: {library.UserAccount.Username}");
+        Console.WriteLine($"Дата створення: {library.UserAccount.CreatedAt}");
+
+        Pause();
+    }
+    static void ChangePassword()
+    {
+        Console.Clear();
+        Console.WriteLine("-------- ЗМІНА ПАРОЛЯ --------");
+
+        Console.Write("Введіть поточний пароль: ");
+        string oldPassword = Console.ReadLine() ?? "";
+
+        Console.Write("Введіть новий пароль: ");
+        string newPassword = Console.ReadLine() ?? "";
+
+        try
+        {
+            library.UserAccount.ChangePassword(oldPassword, newPassword);
+            ShowSuccess("Пароль успішно змінено");
+        }
+        catch (ArgumentException ex)
+        {
+            ShowError(ex.Message);
+        }
+
+        Pause();
+    }
+
+
 
     // HELPER METHODS
 
@@ -686,5 +724,25 @@ class Program
 
         int choice = ReadIntInRange("Ваш вибір", 1, genres.Length);
         return (Genre)genres.GetValue(choice - 1)!;
+    }
+
+    static void ChangeUsername()
+    {
+        Console.Clear();
+        Console.WriteLine("=== ЗМІНА ІМЕНІ КОРИСТУВАЧА ===");
+
+        string newUsername = ReadNonEmptyString("Введіть нове імʼя користувача");
+
+        try
+        {
+            library.UserAccount.ChangeUsername(newUsername);
+            ShowSuccess("Імʼя користувача успішно змінено");
+        }
+        catch (Exception ex)
+        {
+            ShowError(ex.Message);
+        }
+
+        Pause();
     }
 }
