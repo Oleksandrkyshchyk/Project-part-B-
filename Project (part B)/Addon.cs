@@ -1,18 +1,28 @@
 ﻿using Project__part_B_;
+
 public class Addon : LibraryItem
 {
-    public string ParentGameTitle { get; set; } = null!;
+    public Game ParentGame { get; set; } = null!;
 
     public override void Install()
     {
-        Console.WriteLine($"Installing Addon: {Title} for {ParentGameTitle}...");
+        Console.WriteLine(
+            $"Installing Addon: {Title} for {ParentGame.Title}..."
+        );
+        IsInstalled = true;
     }
 
-    public override void Uninstall() => Console.WriteLine($"Removing Addon {Title}...");
+    public override void Uninstall()
+    {
+        Console.WriteLine($"Removing Addon {Title}...");
+        IsInstalled = false;
+    }
 
     public override void DisplayInfo()
     {
-        Console.WriteLine($"[Addon] {Title} | Price: {Price} | For: {ParentGameTitle}");
+        Console.WriteLine(
+            $"[Addon] {Title} | Price: {Price} | For: {ParentGame.Title}"
+        );
     }
 
     public override object Clone()
@@ -22,7 +32,7 @@ public class Addon : LibraryItem
             Title = this.Title,
             Price = this.Price,
             SizeGb = this.SizeGb,
-            ParentGameTitle = this.ParentGameTitle
+            ParentGame = this.ParentGame
         };
     }
 }

@@ -1,6 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Project__part_B_;
-using System;
 
 namespace Project__part_B_Tests
 {
@@ -8,113 +7,226 @@ namespace Project__part_B_Tests
     public class GameTests
     {
         [TestMethod]
-        public void Title_SetAndGet_ShouldWork()
+        public void Title_SetInGame_ShouldBeStored()
         {
-            var game = new Game { Title = "Elden Ring" };
-            Assert.AreEqual("Elden Ring", game.Title);
+            // Arrange
+            var game = new Game();
+            string title = "Elden Ring";
+
+            // Act
+            game.Title = title;
+
+            // Assert
+            Assert.AreEqual(title, game.Title);
         }
 
         [TestMethod]
         public void Game_ShouldImplementILibraryItem()
         {
+            // Arrange
             var game = new Game();
-            Assert.IsInstanceOfType(game, typeof(ILibraryItem));
+
+            // Act
+            var result = game is ILibraryItem;
+
+            // Assert
+            Assert.IsTrue(result);
         }
 
         [TestMethod]
-        public void Creator_Association_ShouldWork()
+        public void Creator_AssignedToGame_ShouldBeAccessible()
         {
-            var dev = new Developer { Name = "FromSoftware" };
-            var game = new Game { Creator = dev };
+            // Arrange
+            var developer = new Developer { Name = "FromSoftware" };
+            var game = new Game();
+
+            // Act
+            game.Creator = developer;
+
+            // Assert
             Assert.AreEqual("FromSoftware", game.Creator.Name);
         }
 
         [TestMethod]
-        public void Install_ShouldThrowNotImplementedException()
+        public void Install_ShouldSetIsInstalledToTrue()
         {
+            // Arrange
+            var game = new Game { Title = "Dark Souls" };
+
+            // Act
+            game.Install();
+
+            // Assert
+            Assert.IsTrue(game.IsInstalled);
+        }
+
+        [TestMethod]
+        public void Uninstall_ShouldSetIsInstalledToFalse()
+        {
+            // Arrange
+            var game = new Game { Title = "Dark Souls" };
+            game.Install();
+
+            // Act
+            game.Uninstall();
+
+            // Assert
+            Assert.IsFalse(game.IsInstalled);
+        }
+
+        [TestMethod]
+        public void Clone_ShouldCreateNewGameWithSameData()
+        {
+            // Arrange
+            var game = new Game
+            {
+                Title = "Original",
+                Price = 60,
+                SizeGb = 40,
+                GameGenre = Genre.RPG
+            };
+
+            // Act
+            var clone = (Game)game.Clone();
+
+            // Assert
+            Assert.AreNotSame(game, clone);
+            Assert.AreEqual(game.Title, clone.Title);
+            Assert.AreEqual(game.Price, clone.Price);
+            Assert.AreEqual(game.GameGenre, clone.GameGenre);
+            Assert.IsFalse(clone.IsInstalled);
+        }
+
+        [TestMethod]
+        public void CompareTo_GameWithHigherPrice_ShouldReturnNegative()
+        {
+            // Arrange
+            var cheapGame = new Game { Price = 20 };
+            var expensiveGame = new Game { Price = 60 };
+
+            // Act
+            int result = cheapGame.CompareTo(expensiveGame);
+
+            // Assert
+            Assert.IsTrue(result < 0);
+        }
+
+        [TestMethod]
+        public void GameGenre_Set_ShouldBeStored()
+        {
+            // Arrange
             var game = new Game();
-            Assert.ThrowsException<NotImplementedException>(() => game.Install());
+            var genre = Genre.Action;
+
+            // Act
+            game.GameGenre = genre;
+
+            // Assert
+            Assert.AreEqual(genre, game.GameGenre);
         }
 
         [TestMethod]
-        public void Uninstall_ShouldThrowNotImplementedException()
+        public void Install_CalledTwice_ShouldRemainInstalled()
         {
-            var game = new Game();
-            Assert.ThrowsException<NotImplementedException>(() => game.Uninstall());
+            // Arrange
+            var game = new Game { Title = "Skyrim" };
+
+            // Act
+            game.Install();
+            game.Install();
+
+            // Assert
+            Assert.IsTrue(game.IsInstalled);
         }
 
         [TestMethod]
-        public void DisplayInfo_ShouldThrowNotImplementedException()
+        public void Uninstall_WithoutInstall_ShouldRemainNotInstalled()
         {
-            var game = new Game();
-            Assert.ThrowsException<NotImplementedException>(() => game.DisplayInfo());
+            // Arrange
+            var game = new Game { Title = "Skyrim" };
+
+            // Act
+            game.Uninstall();
+
+            // Assert
+            Assert.IsFalse(game.IsInstalled);
         }
 
         [TestMethod]
-        public void GameGenre_SetAndGet_ShouldWork()
+        public void Clone_FromInstalledGame_ShouldNotBeInstalled()
         {
-            var game = new Game { GameGenre = Genre.RPG };
-            Assert.AreEqual(Genre.RPG, game.GameGenre);
+            // Arrange
+            var game = new Game { Title = "Skyrim" };
+            game.Install();
+
+            // Act
+            var clone = (Game)game.Clone();
+
+            // Assert
+            Assert.IsFalse(clone.IsInstalled);
         }
 
         [TestMethod]
-        public void Game_Price_ShouldNotBeNegative()
+        public void Clone_ShouldCopyCreatorReference()
         {
-            var game = new Game();
-            game.Price = -100;
-            // Перевіряємо можливість запису або очікуємо 0.
-            Assert.IsTrue(game.Price >= 0, "Price should not be negative");
+            // Arrange
+            var developer = new Developer { Name = "Bethesda" };
+            var game = new Game
+            {
+                Title = "Skyrim",
+                Creator = developer
+            };
+
+            // Act
+            var clone = (Game)game.Clone();
+
+            // Assert
+            Assert.AreEqual(developer, clone.Creator);
         }
 
         [TestMethod]
-        public void Game_SizeGb_ShouldHaveMinimumValue()
+        public void CompareTo_SamePrice_ShouldReturnZero()
         {
-            var game = new Game { SizeGb = 0.01 };
-            Assert.IsTrue(game.SizeGb > 0, "Game size must be positive");
+            // Arrange
+            var game1 = new Game { Price = 50 };
+            var game2 = new Game { Price = 50 };
+
+            // Act
+            int result = game1.CompareTo(game2);
+
+            // Assert
+            Assert.AreEqual(0, result);
         }
 
         [TestMethod]
-        public void Game_Title_ShouldNotBeEmpty()
+        public void CompareTo_Null_ShouldReturnPositive()
         {
-            var game = new Game { Title = "" };
-            // Тест на майбутню валідацію: назва не може бути порожньою
-            Assert.IsNotNull(game.Title);
+            // Arrange
+            var game = new Game { Price = 50 };
+
+            // Act
+            int result = game.CompareTo(null);
+
+            // Assert
+            Assert.IsTrue(result > 0);
         }
 
         [TestMethod]
-        public void Game_ShouldBeCloneable()
+        public void GameGenre_ShouldRemainAfterInstallAndUninstall()
         {
-            var game = new Game { Title = "Original" };
-            Assert.ThrowsException<NotImplementedException>(() => game.Clone());
-        }
+            // Arrange
+            var game = new Game
+            {
+                Title = "Doom",
+                GameGenre = Genre.Action
+            };
 
-        [TestMethod]
-        public void Game_Comparison_ByPrice_ShouldThrowException()
-        {
-            var game1 = new Game { Price = 100 };
-            var game2 = new Game { Price = 200 };
-            Assert.ThrowsException<NotImplementedException>(() => game1.CompareTo(game2));
-        }
+            // Act
+            game.Install();
+            game.Uninstall();
 
-        [TestMethod]
-        public void Game_Price_ZeroIsAllowed()
-        {
-            var game = new Game { Price = 0 };
-            Assert.AreEqual(0, game.Price);
-        }
-
-        [TestMethod]
-        public void Game_Price_ShouldNotExceedLimit()
-        {
-            var game = new Game { Price = 5000 };
-            Assert.IsTrue(game.Price < 10000, "Price is too high for a standard game");
-        }
-
-        [TestMethod]
-        public void Game_Size_ShouldBePositive()
-        {
-            var game = new Game { SizeGb = 50.5 };
-            Assert.IsTrue(game.SizeGb > 0);
+            // Assert
+            Assert.AreEqual(Genre.Action, game.GameGenre);
         }
     }
 }

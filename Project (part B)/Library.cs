@@ -7,17 +7,19 @@ namespace Project__part_B_
     public class Library
     {
         // Поля / Властивості
-        public string OwnerName { get; set; }
+        public string OwnerName => UserAccount.Username ?? UserAccount.Email;
         public List<LibraryItem> PurchasedGames { get; set; } = new List<LibraryItem>();
         public Account UserAccount { get; private set; }
 
+
         // Конструктор
-        public Library(string ownerName)
+
+        public Library(Account account)
         {
-            this.OwnerName = ownerName;
-            this.PurchasedGames = new List<LibraryItem>();
-            this.UserAccount = new Account();
+            UserAccount = account ?? throw new ArgumentNullException(nameof(account));
+            PurchasedGames = new List<LibraryItem>();
         }
+
 
         // Методи
 
@@ -66,7 +68,8 @@ namespace Project__part_B_
         // Метод для сортування за назвою
         public void SortItemsByTitle()
         {
-            PurchasedGames = PurchasedGames.OrderBy(item => item.Title).ToList();
+            PurchasedGames.Sort((a, b) =>
+                string.Compare(a.Title, b.Title, StringComparison.OrdinalIgnoreCase));
         }
 
         // Метод для сортування за ціною
@@ -74,5 +77,11 @@ namespace Project__part_B_
         {
             PurchasedGames.Sort();
         }
+
+        public void AddAddon(Addon addon)
+        {
+            PurchasedGames.Add(addon);
+        }
+
     }
 }

@@ -7,6 +7,7 @@ namespace Project__part_B_
         public string Title { get; set; } = null!;
         public double SizeGb { get; set; }
         public double Price { get; set; }
+        public bool IsInstalled { get; set; }
 
         public int CompareTo(ILibraryItem? other)
         {

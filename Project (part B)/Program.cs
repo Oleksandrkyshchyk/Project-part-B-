@@ -1,10 +1,12 @@
-using Project__part_B_;
+﻿using Project__part_B_;
 using System;
 using System.Linq;
 
 class Program
 {
-    static Library library = new Library("Default User");
+    static Library library = new Library(
+    new Account("user@mail.com", "DefaultUser", "1234")
+);
 
     static void Main()
     {
@@ -128,6 +130,12 @@ class Program
 
             int choice = ReadIntInRange("Оберіть дію", 0, 2);
 
+            if (choice == 0)
+            {
+                back = true;
+                continue;
+            }
+
             if (!library.PurchasedGames.Any())
             {
                 ShowInfo("Бібліотека порожня");
@@ -147,10 +155,6 @@ class Program
                     library.SortItemsByPrice();
                     ShowSuccess("Бібліотеку відсортовано за ціною");
                     Pause();
-                    break;
-
-                case 0:
-                    back = true;
                     break;
             }
         }

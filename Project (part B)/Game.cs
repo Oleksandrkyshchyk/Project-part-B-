@@ -5,22 +5,22 @@
         public Genre GameGenre { get; set; }
         public Developer Creator { get; set; } = null!;
 
-        public bool IsInstalled { get; set; }
-
         public override void Install()
         {
-            IsInstalled = true;
             Console.WriteLine($"Гру {Title} встановлено");
+            IsInstalled = true;
         }
+
         public override void Uninstall()
         {
-            IsInstalled = false;
             Console.WriteLine($"Гру {Title} видалено");
+            IsInstalled = false;
         }
 
         public override void DisplayInfo()
         {
-            Console.WriteLine($"[Game] {Title} | Genre: {GameGenre} | Price: {Price} | Installed: {IsInstalled}");
+            Console.WriteLine(
+                $"[Game] {Title} | Genre: {GameGenre} | Price: {Price} | Installed: {IsInstalled}");
         }
 
         public override object Clone()
@@ -32,7 +32,7 @@
                 SizeGb = this.SizeGb,
                 GameGenre = this.GameGenre,
                 Creator = this.Creator,
-                IsInstalled = this.IsInstalled
+                IsInstalled = false   // 🔥 логічно для клона
             };
         }
     }

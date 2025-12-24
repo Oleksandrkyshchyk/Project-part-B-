@@ -3,16 +3,41 @@
     public class Account
     {
         public string Email { get; set; } = null!;
-        public DateTime CreatedAt { get; set; }
-        public string? Username { get; set; }
-        public string? Password { get; set; }
+        public string Username { get; set; } = null!;
+        public DateTime CreatedAt { get; private set; }
 
-        public void ChangePassword(string newPassword)
+        private string Password;
+
+        public Account(string email, string username, string password)
         {
-            if (string.IsNullOrWhiteSpace(newPassword))
-                throw new ArgumentException("Пароль не може бути порожнім");
+            Email = email;
+            Username = username;
+            CreatedAt = DateTime.Now;
+            Password = password;
+        }
+
+        public bool CheckPassword(string password)
+        {
+            return Password == password;
+        }
+
+        public void ChangePassword(string oldPassword, string newPassword)
+        {
+            if (!CheckPassword(oldPassword))
+                throw new ArgumentException("Невірний поточний пароль");
+
+            if (string.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 6)
+                throw new ArgumentException("Новий пароль занадто короткий");
 
             Password = newPassword;
+        }
+
+        public void ChangeUsername(string newUsername)
+        {
+            if (string.IsNullOrWhiteSpace(newUsername))
+                throw new ArgumentException("Імʼя користувача не може бути порожнім");
+
+            Username = newUsername;
         }
     }
 }

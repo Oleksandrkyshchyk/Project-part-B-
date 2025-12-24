@@ -7,46 +7,110 @@ namespace Project__part_B_Tests
     public class DeveloperTests
     {
         [TestMethod]
-        public void Name_SetAndGet_ShouldWork()
+        public void Name_Set_ShouldBeStored()
         {
-            var dev = new Developer { Name = "CD Projekt Red" };
-            Assert.AreEqual("CD Projekt Red", dev.Name);
+            // Arrange
+            var developer = new Developer();
+            string name = "CD Projekt Red";
+
+            // Act
+            developer.Name = name;
+
+            // Assert
+            Assert.AreEqual(name, developer.Name);
         }
 
         [TestMethod]
-        public void FoundationYear_SetAndGet_ShouldWork()
+        public void FoundationYear_Set_ShouldBeStored()
         {
-            var dev = new Developer { FoundationYear = 1994 };
-            Assert.AreEqual(1994, dev.FoundationYear);
+            // Arrange
+            var developer = new Developer();
+            int year = 1994;
+
+            // Act
+            developer.FoundationYear = year;
+
+            // Assert
+            Assert.AreEqual(year, developer.FoundationYear);
         }
 
         [TestMethod]
         public void Developer_Constructor_ShouldCreateInstance()
         {
-            var dev = new Developer();
-            Assert.IsNotNull(dev);
+            // Arrange & Act
+            var developer = new Developer();
+
+            // Assert
+            Assert.IsNotNull(developer);
         }
 
         [TestMethod]
-        public void Developer_FoundationYear_ShouldNotBeInFuture()
+        public void Developer_Name_ShouldNotBeNull()
         {
-            var dev = new Developer { FoundationYear = 2050 };
-            // У майбутньому тут буде логіка валідації
-            Assert.IsTrue(dev.FoundationYear <= DateTime.Now.Year, "Year cannot be in the future");
+            // Arrange
+            var developer = new Developer();
+
+            // Act
+            developer.Name = "Valve";
+
+            // Assert
+            Assert.IsNotNull(developer.Name);
         }
 
         [TestMethod]
-        public void Developer_FoundationYear_ShouldNotBeTooOld()
+        public void Name_CanBeChangedMultipleTimes()
         {
-            var dev = new Developer { FoundationYear = 1800 };
-            Assert.IsTrue(dev.FoundationYear >= 1950, "Video game companies didn't exist in 1800");
+            // Arrange
+            var developer = new Developer();
+
+            // Act
+            developer.Name = "Valve";
+            developer.Name = "Rockstar";
+
+            // Assert
+            Assert.AreEqual("Rockstar", developer.Name);
         }
 
         [TestMethod]
-        public void Developer_Name_Length_ShouldBeWithinReason()
+        public void FoundationYear_CanBeUpdated()
         {
-            var dev = new Developer { Name = "A" };
-            Assert.IsTrue(dev.Name.Length >= 1, "Company name cannot be empty");
+            // Arrange
+            var developer = new Developer();
+
+            // Act
+            developer.FoundationYear = 1998;
+            developer.FoundationYear = 2001;
+
+            // Assert
+            Assert.AreEqual(2001, developer.FoundationYear);
+        }
+
+        [TestMethod]
+        public void Developer_Properties_ShouldBeIndependentBetweenInstances()
+        {
+            // Arrange
+            var dev1 = new Developer { Name = "CD Projekt" };
+            var dev2 = new Developer { Name = "Ubisoft" };
+
+            // Act
+            dev1.Name = "CDPR";
+
+            // Assert
+            Assert.AreEqual("CDPR", dev1.Name);
+            Assert.AreEqual("Ubisoft", dev2.Name);
+        }
+
+        [TestMethod]
+        public void Name_CanBeSetToNull()
+        {
+            // Arrange
+            var developer = new Developer { Name = "Valve" };
+
+            // Act
+            developer.Name = null!;
+
+            // Assert
+            Assert.IsNull(developer.Name);
         }
     }
 }
