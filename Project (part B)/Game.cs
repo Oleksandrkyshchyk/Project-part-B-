@@ -32,8 +32,9 @@
                 SizeGb = this.SizeGb,
                 GameGenre = this.GameGenre,
                 Creator = this.Creator,
-                IsInstalled = false   // 🔥 логічно для клона
+                IsInstalled = false
             };
         }
     }
 }
+
