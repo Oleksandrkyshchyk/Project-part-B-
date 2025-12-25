@@ -5,7 +5,7 @@ using System.Linq;
 class Program
 {
     static Library library = new Library(
-    new Account("user@mail.com", "DefaultUser", "1234")
+    new Account("user@mail.com", "DefaultUser", "password")
 );
 
     static void Main()
@@ -750,3 +750,4 @@ class Program
         Pause();
     }
 }
+
